@@ -3,14 +3,15 @@
 // Create connection to Node.JS Server
 const socket = io();
 
-// 下面的东西不要改
-// 基础设置和样式和材质
+
 let canvas;
 let roll = 0;
 let pitch = 0;
 let yaw = 0;
 let cubes = [];
+let spheres=[]
 let numCubes = 100;
+let numSpheres=100
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight, WEBGL);
@@ -18,8 +19,12 @@ function setup() {
   createEasyCam();
 
   for (let i = 0; i < numCubes; i++) {
-    let cube = new Cube(random(-200, 200), random(-200, 200), random(-200, 200));
+    let cube = new Cube(random(-200, 400), random(-200, 400), random(-200, 400));
     cubes.push(cube);
+  }
+  for (let i = 0; i < numSpheres; i++) {
+    let sphere = new Sphere(random(-200, 400), random(-200, 400), random(-200, 400));
+    spheres.push(sphere);
   }
  
 }
@@ -27,6 +32,8 @@ function setup() {
 function draw() {
   background(200);
 
+  // 下面的东西不要改
+// 基础设置和样式和材质
   noStroke();
   lights();
   ambientMaterial(100, 0, 100);
@@ -38,6 +45,11 @@ function draw() {
     cubes[i].update();
     cubes[i].display();
   }
+
+  for (let i = 0; i < numSpheres; i++) {
+    spheres[i].update();
+    spheres[i].display();
+  }
 }
 
 class Cube {
@@ -46,10 +58,15 @@ class Cube {
     this.color = color(random(255), random(255), random(255));
     // 随机大小
     this.size = random(10, 100);
+    // 和重力有关的设置
+    // this.velocity = createVector(0, 0, 0); // 初始速度
+    // this.acceleration = createVector(0, 0.05, 0); // 重力加速度
   }
 
   update() {
-    // 此处可以添加任何更新逻辑，目前没有需要更新的内容
+    // 和重力有关的设置
+    // this.velocity.add(this.acceleration);
+    // this.position.add(this.velocity);
   }
 
   display() {
@@ -57,6 +74,33 @@ class Cube {
     translate(this.position.x, this.position.y, this.position.z);
     normalMaterial(); // 使用 normalMaterial() 设置材质
     box(this.size); // 绘制正方体
+    pop();
+  }
+}
+
+class Sphere {
+  constructor(x, y, z) {
+    this.position = createVector(x, y, z);
+    this.color = color(random(255), random(255), random(255));
+    // 随机大小
+    this.size = random(10, 100);
+    // 和重力有关的设置
+    // this.velocity = createVector(0, 0, 0); // 初始速度
+    // this.acceleration = createVector(0, 0.05, 0); // 重力加速度
+  }
+
+  update() {
+    // 和重力有关的设置
+    // this.velocity.add(this.acceleration);
+    // this.position.add(this.velocity);
+  }
+
+  display() {
+    push();
+    translate(this.position.x, this.position.y, this.position.z);
+    normalMaterial(); // 使用 normalMaterial() 设置材质
+    fill(this.color);
+    sphere(this.size/2,55,55); // 绘制正方体
     pop();
   }
 }
