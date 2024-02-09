@@ -12,34 +12,58 @@ let cubes = [];
 let spheres=[]
 let numCubes = 100;
 let numSpheres=100
+let x1, y1; // 物体的位置
+let radius; // 光晕的半径
+let brightness; // 光晕的亮度
+
+
+
+
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight, WEBGL);
  
   createEasyCam();
 
+  x1 = width / 2;
+  y1 = height / 2;
+  radius = 200;
+  brightness = 400;
+
   for (let i = 0; i < numCubes; i++) {
-    let cube = new Cube(random(-200, 400), random(-200, 400), random(-200, 400));
+    let cube = new Cube(random(-200, 800), random(-200, 800), random(-200, 800));
     cubes.push(cube);
   }
   for (let i = 0; i < numSpheres; i++) {
-    let sphere = new Sphere(random(-200, 400), random(-200, 400), random(-200, 400));
+    let sphere = new Sphere(random(-200, 600), random(-200, 600), random(-200, 600));
+    
     spheres.push(sphere);
   }
+ 
  
 }
 
 function draw() {
-  background(200);
+  background(0);
 
   // 下面的东西不要改
 // 基础设置和样式和材质
-  noStroke();
-  lights();
-  ambientMaterial(100, 0, 100);
+  // noStroke();
+  stroke(255)
+  strokeWeight(2)
+  // lights();
+  ambientLight(100);
+  pointLight(255, 255, 255, 0, 0, 200);
+  emissiveMaterial(255, 255, 183);
   rotateZ(pitch);
   rotateX(roll);
   rotateY(yaw);
+
+  fill(0, 150, 255);
+  ellipse(x1, y1, 200, 200);
+  noStroke()
+
+  drawGlow(x1, y1, radius, brightness);
 
   for (let i = 0; i < numCubes; i++) {
     cubes[i].update();
@@ -50,7 +74,19 @@ function draw() {
     spheres[i].update();
     spheres[i].display();
   }
+
+
 }
+
+function drawGlow(x1, y1, radius, brightness) {
+  // 使用多个圆圈层叠，每个圆圈透明度逐渐减小，形成光晕效果
+  for (let i = 0; i < 5; i++) {
+    let alpha = map(i, 0, 5, brightness, 0);
+    fill(0, 150, 255, alpha);
+    ellipse(x1, y1, radius + i * 10, radius + i * 10);
+  }
+}
+
 
 class Cube {
   constructor(x, y, z) {
@@ -61,6 +97,8 @@ class Cube {
     // 和重力有关的设置
     // this.velocity = createVector(0, 0, 0); // 初始速度
     // this.acceleration = createVector(0, 0.05, 0); // 重力加速度
+
+   
   }
 
   update() {
@@ -72,7 +110,12 @@ class Cube {
   display() {
     push();
     translate(this.position.x, this.position.y, this.position.z);
-    normalMaterial(); // 使用 normalMaterial() 设置材质
+    emissiveMaterial(this.color); // 使用 normalMaterial() 设置材质
+
+    stroke(255)
+    strokeWeight(2)
+    
+
     box(this.size); // 绘制正方体
     pop();
   }
@@ -82,11 +125,20 @@ class Sphere {
   constructor(x, y, z) {
     this.position = createVector(x, y, z);
     this.color = color(random(255), random(255), random(255));
+
+    // 颜色测试
+    // for (let i = 0; i < 5; i++) {
+    //   let alpha = map(i, 0, 5, brightness, 0);
+    // this.color =  fill(255, 182, 193, alpha);
+    // }
+
     // 随机大小
     this.size = random(10, 100);
     // 和重力有关的设置
     // this.velocity = createVector(0, 0, 0); // 初始速度
     // this.acceleration = createVector(0, 0.05, 0); // 重力加速度
+
+    
   }
 
   update() {
@@ -98,9 +150,17 @@ class Sphere {
   display() {
     push();
     translate(this.position.x, this.position.y, this.position.z);
-    normalMaterial(); // 使用 normalMaterial() 设置材质
+    emissiveMaterial(this.color); // 使用 normalMaterial() 设置材质
+    
+ 
+    stroke(255)
+    strokeWeight(2)
     fill(this.color);
-    sphere(this.size/2,55,55); // 绘制正方体
+    sphere(this.size/2,55,55); // 绘制球体
+
+    // 测试光晕效果
+    // sphere(this.size/2,radius + i * 10, radius + i * 10); // 绘制球体
+
     pop();
   }
 }
