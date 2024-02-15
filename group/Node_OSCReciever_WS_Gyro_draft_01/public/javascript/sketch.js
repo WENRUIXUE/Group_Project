@@ -221,6 +221,20 @@ function fireAll() {
 //Events we are listening for
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+  setScale();
+}
+
+function keyPressed() {
+  //toggle fullscreen on or off
+  if (key == 'f') {
+
+    //get current full screen state https://p5js.org/reference/#/p5/fullscreen
+    let fs = fullscreen();
+
+    //switch it to the opposite of current value
+    console.log("Full screen getting set to: " + !fs);
+    fullscreen(!fs);
+  }
 }
 
 // Connect to Node.JS Server
