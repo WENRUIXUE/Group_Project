@@ -3,11 +3,19 @@
 WCC2 WEEK05
  
 
+Title: 
+
 Fireworks simulation
 
 For celebrating Chinese Lunar New Year, Year of the Loong (Chinese Dragon)
- 
 
+Note:
+
+Changes from Gyro's case in class；
+
+Number of ports: 9000;
+
+OSC value used: Gyroscope, Accelerator
 
 Instruction:
 
